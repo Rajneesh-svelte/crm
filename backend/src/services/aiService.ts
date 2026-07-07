@@ -1,6 +1,16 @@
 import { GoogleGenAI, Type, Schema } from '@google/genai';
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Lazy initialization to ensure process.env is fully loaded and throw a clear error if missing
+let ai: GoogleGenAI;
+const getAiClient = () => {
+  if (!ai) {
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error("GEMINI_API_KEY environment variable is missing. ");
+    }
+    ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+  }
+  return ai;
+};
 
 export const processRecordsWithAI = async (records: any[]) => {
 
@@ -92,7 +102,7 @@ Input records:
 ${JSON.stringify(batch, null, 2)}
   `;
 
-  const response = await ai.models.generateContent({
+  const response = await getAiClient().models.generateContent({
     model: 'gemini-2.5-flash',
     contents: prompt,
     config: {
