@@ -6,16 +6,20 @@ import uploadRouter from './routes/upload';
 const app = express();
 const port = process.env.PORT || 5001;
 
+// Allowed origins list for CORS
 const allowedOrigins = [
   'https://crm-4dya.vercel.app',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'https://crm-827z.vercel.app' // Added another Vercel deployment
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('CORS blocked origin:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   }
