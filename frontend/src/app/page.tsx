@@ -51,7 +51,8 @@ export default function Home() {
     const formData = new FormData();
     formData.append('file', file);
 
-    fetch('http://localhost:5001/api/upload', {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://crm-eduj.vercel.app';
+    fetch(`${backendUrl}/api/upload`, {
       method: 'POST',
       body: formData,
     })

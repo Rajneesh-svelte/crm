@@ -6,7 +6,20 @@ import uploadRouter from './routes/upload';
 const app = express();
 const port = process.env.PORT || 5001;
 
-app.use(cors());
+const allowedOrigins = [
+  'https://crm-4dya.vercel.app',
+  'http://localhost:3000'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 app.use(express.json());
 
 app.use('/api/upload', uploadRouter);
