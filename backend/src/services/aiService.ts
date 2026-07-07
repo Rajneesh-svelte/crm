@@ -24,10 +24,9 @@ export const processRecordsWithAI = async (records: any[]) => {
     try {
       const processedBatch = await extractCRMFields(batch);
       allProcessed = [...allProcessed, ...processedBatch];
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error processing batch ${i / BATCH_SIZE + 1}:`, error);
-      const skippedBatch = batch.map(r => ({ ...r, status: 'skipped', reason: 'AI processing failed' }));
-      allProcessed = [...allProcessed, ...skippedBatch];
+      throw new Error(`AI Processing Failed: ${error.message || 'Unknown error'}`);
     }
   }
 
